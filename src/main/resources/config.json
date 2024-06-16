@@ -1,0 +1,70 @@
+{
+  "token": "",
+  "total-shards": 1,
+  "super-id": {
+    "user": "",
+    "guild": ""
+  },
+  "copyright-icon-url": "",
+  "presence": {
+    "activity": "%total_guilds% Servers (#%total_users%)",
+    "status": "ONLINE",
+    "type": "PLAYING",
+    "url": "https://twitch.tv/"
+  },
+  "ranking": {
+    "enabled": true,
+    "voice": {
+      "enabled": true,
+      "max-members": 0
+    },
+    "multiplier": {
+      "text": 1,
+      "voice": 1
+    },
+    "banned-roles": [],
+    "rewards": [],
+    "ignored": {
+      "channels": [],
+      "voice-channels": []
+    }
+  },
+  "audit": {
+    "enabled": true,
+    "forward": {
+      "enabled": true,
+      "channel-id": "",
+      "actions": []
+    },
+    "keep-months": 1,
+    "history": {
+      "enabled": true,
+      "days": 7
+    }
+  },
+  "moderation": {
+    "roles": [],
+    "public-colors": true,
+    "muted-role-id": ""
+  },
+  "api-keys": {
+    "wallheaven": ""
+  },
+  "data": {
+    "address": "localhost",
+    "database": "discord",
+    "username": "root",
+    "password": "",
+    "pool-settings": {
+      "maximum-pool-size": 10,
+      "minimum-idle": 10,
+      "maximum-lifetime": 1800000,
+      "keepalive-time": 0,
+      "connection-timeout": 5000,
+      "properties": {
+        "useUnicode": true,
+        "characterEncoding": "utf8"
+      }
+    }
+  }
+}

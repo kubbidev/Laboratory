@@ -68,10 +68,9 @@ public final class Point implements GsonSerializable {
         if (o == this) {
             return true;
         }
-        if (!(o instanceof Point)) {
+        if (!(o instanceof Point other)) {
             return false;
         }
-        Point other = (Point) o;
         return this.getPosition().equals(other.getPosition()) && this.getDirection().equals(other.getDirection());
     }
 

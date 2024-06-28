@@ -97,7 +97,7 @@ public interface Cooldown {
 
         long remaining = remainingMillis();
         OptionalLong lastTestedOptional = getLastTested();
-        if (!lastTestedOptional.isPresent()) {
+        if (lastTestedOptional.isEmpty()) {
             // if lastTested is not set, there's nothing to reduce
             return;
         }
@@ -120,7 +120,7 @@ public interface Cooldown {
 
         long initialTimeout = getTimeout();
         OptionalLong lastTestedOptional = getLastTested();
-        if (!lastTestedOptional.isPresent()) {
+        if (lastTestedOptional.isEmpty()) {
             // if lastTested is not set, there's nothing to reduce
             return;
         }
@@ -141,7 +141,7 @@ public interface Cooldown {
     default void reduceFlat(@Range(from = 0, to = Long.MAX_VALUE) float d) {
         Preconditions.checkArgument(d >= 0, "Reduction amount must be non-negative");
         OptionalLong lastTestedOptional = getLastTested();
-        if (!lastTestedOptional.isPresent()) {
+        if (lastTestedOptional.isEmpty()) {
             // if lastTested is not set, there's nothing to reduce
             return;
         }

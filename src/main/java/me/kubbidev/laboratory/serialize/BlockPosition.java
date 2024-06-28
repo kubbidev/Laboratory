@@ -94,10 +94,9 @@ public final class BlockPosition implements GsonSerializable {
         if (o == this) {
             return true;
         }
-        if (!(o instanceof BlockPosition)) {
+        if (!(o instanceof BlockPosition other)) {
             return false;
         }
-        BlockPosition other = (BlockPosition) o;
         return this.getX() == other.getX()
                 && this.getY() == other.getY()
                 && this.getZ() == other.getZ()

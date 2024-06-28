@@ -97,10 +97,9 @@ public final class CircularRegion implements GsonSerializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof CircularRegion)) {
+        if (!(o instanceof CircularRegion other)) {
             return false;
         }
-        CircularRegion other = (CircularRegion) o;
         return Double.compare(other.radius, this.radius) == 0 &&
                 center.equals(other.center);
     }

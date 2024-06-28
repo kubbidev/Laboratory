@@ -112,58 +112,25 @@ public class DoubleEvaluator {
                         } else {
                             x = parseFactor();
                         }
-                        switch (func) {
-                            case "sqrt":
-                                x = Math.sqrt(x);
-                                break;
-                            case "sin":
-                                x = Math.sin(Math.toRadians(x));
-                                break;
-                            case "cos":
-                                x = Math.cos(Math.toRadians(x));
-                                break;
-                            case "tan":
-                                x = Math.tan(Math.toRadians(x));
-                                break;
-                            case "asin":
-                                x = Math.asin(Math.toRadians(x));
-                                break;
-                            case "acos":
-                                x = Math.acos(Math.toRadians(x));
-                                break;
-                            case "atan":
-                                x = Math.atan(Math.toRadians(x));
-                                break;
-                            case "exp":
-                                x = Math.exp(x);
-                                break;
-                            case "toDegrees":
-                                x = Math.toDegrees(x);
-                                break;
-                            case "toRadians":
-                                x = Math.toRadians(x);
-                                break;
-                            case "log":
-                                x = Math.log(x);
-                                break;
-                            case "log10":
-                                x = Math.log10(x);
-                                break;
-                            case "abs":
-                                x = Math.abs(x);
-                                break;
-                            case "ceil":
-                                x = Math.ceil(x);
-                                break;
-                            case "floor":
-                                x = Math.floor(x);
-                                break;
-                            case "round":
-                                x = Math.round(x);
-                                break;
-                            default:
-                                throw new ArithmeticException("Unknown function or variable: " + func);
-                        }
+                        x = switch (func) {
+                            case "sqrt" -> Math.sqrt(x);
+                            case "sin" -> Math.sin(Math.toRadians(x));
+                            case "cos" -> Math.cos(Math.toRadians(x));
+                            case "tan" -> Math.tan(Math.toRadians(x));
+                            case "asin" -> Math.asin(Math.toRadians(x));
+                            case "acos" -> Math.acos(Math.toRadians(x));
+                            case "atan" -> Math.atan(Math.toRadians(x));
+                            case "exp" -> Math.exp(x);
+                            case "toDegrees" -> Math.toDegrees(x);
+                            case "toRadians" -> Math.toRadians(x);
+                            case "log" -> Math.log(x);
+                            case "log10" -> Math.log10(x);
+                            case "abs" -> Math.abs(x);
+                            case "ceil" -> Math.ceil(x);
+                            case "floor" -> Math.floor(x);
+                            case "round" -> Math.round(x);
+                            default -> throw new ArithmeticException("Unknown function or variable: " + func);
+                        };
                     } else {
                         x = variables.get(func);
                     }

@@ -77,10 +77,9 @@ public final class ChunkRegion implements GsonSerializable {
         if (o == this) {
             return true;
         }
-        if (!(o instanceof ChunkRegion)) {
+        if (!(o instanceof ChunkRegion other)) {
             return false;
         }
-        ChunkRegion other = (ChunkRegion) o;
         return this.getMin().equals(other.getMin()) && this.getMax().equals(other.getMax());
     }
 

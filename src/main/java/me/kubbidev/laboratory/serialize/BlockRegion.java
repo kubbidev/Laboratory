@@ -79,10 +79,9 @@ public final class BlockRegion implements GsonSerializable {
         if (o == this) {
             return true;
         }
-        if (!(o instanceof BlockRegion)) {
+        if (!(o instanceof BlockRegion other)) {
             return false;
         }
-        BlockRegion other = (BlockRegion) o;
         return this.getMin().equals(other.getMin()) && this.getMax().equals(other.getMax());
     }
 

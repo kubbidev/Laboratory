@@ -52,10 +52,9 @@ public final class Direction implements GsonSerializable {
         if (o == this) {
             return true;
         }
-        if (!(o instanceof Direction)) {
+        if (!(o instanceof Direction other)) {
             return false;
         }
-        Direction other = (Direction) o;
         return Float.compare(this.getYaw(), other.getYaw()) == 0 &&
                 Float.compare(this.getPitch(), other.getPitch()) == 0;
     }

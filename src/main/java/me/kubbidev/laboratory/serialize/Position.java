@@ -92,10 +92,9 @@ public final class Position implements GsonSerializable {
         if (o == this) {
             return true;
         }
-        if (!(o instanceof Position)) {
+        if (!(o instanceof Position other)) {
             return false;
         }
-        Position other = (Position) o;
         return Double.compare(this.getX(), other.getX()) == 0 &&
                 Double.compare(this.getY(), other.getY()) == 0 &&
                 Double.compare(this.getZ(), other.getZ()) == 0 &&

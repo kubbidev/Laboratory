@@ -80,10 +80,9 @@ public final class Region implements GsonSerializable {
         if (o == this) {
             return true;
         }
-        if (!(o instanceof Region)) {
+        if (!(o instanceof Region other)) {
             return false;
         }
-        Region other = (Region) o;
         return this.getMin().equals(other.getMin()) && this.getMax().equals(other.getMax());
     }
 

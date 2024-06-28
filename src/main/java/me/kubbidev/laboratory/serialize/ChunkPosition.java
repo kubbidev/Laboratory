@@ -110,10 +110,9 @@ public final class ChunkPosition implements GsonSerializable {
         if (o == this) {
             return true;
         }
-        if (!(o instanceof ChunkPosition)) {
+        if (!(o instanceof ChunkPosition other)) {
             return false;
         }
-        ChunkPosition other = (ChunkPosition) o;
         return this.getX() == other.getX() && this.getZ() == other.getZ() && this.getWorld().equals(other.getWorld());
     }
 

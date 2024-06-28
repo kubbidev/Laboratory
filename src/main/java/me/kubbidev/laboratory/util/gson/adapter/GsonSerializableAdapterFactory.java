@@ -26,7 +26,7 @@ public final class GsonSerializableAdapterFactory implements TypeAdapterFactory 
             return null;
         }
 
-        TypeAdapter<? extends GsonSerializable> typeAdapter = new TypeAdapter<GsonSerializable>() {
+        TypeAdapter<? extends GsonSerializable> typeAdapter = new TypeAdapter<>() {
 
             @Override
             public void write(JsonWriter out, GsonSerializable value) {

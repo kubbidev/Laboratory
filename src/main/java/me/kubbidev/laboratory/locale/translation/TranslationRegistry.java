@@ -218,9 +218,8 @@ public final class TranslationRegistry implements Translator {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof TranslationRegistry)) return false;
+        if (!(o instanceof TranslationRegistry other)) return false;
 
-        TranslationRegistry other = (TranslationRegistry) o;
         return this.name.equals(other.name)
                 && this.translations.equals(other.translations)
                 && this.defaultLocale.equals(other.defaultLocale);
@@ -266,10 +265,9 @@ public final class TranslationRegistry implements Translator {
             if (this == o)
                 return true;
 
-            if (!(o instanceof Translation))
+            if (!(o instanceof Translation other))
                 return false;
 
-            Translation other = (Translation) o;
             return this.key.equals(other.key) &&
                     this.formats.equals(other.formats);
         }

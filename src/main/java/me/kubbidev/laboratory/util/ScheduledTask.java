@@ -1,11 +1,12 @@
 package me.kubbidev.laboratory.util;
 
 import lombok.Getter;
-import lombok.Setter;
 import me.kubbidev.laboratory.scheduler.SchedulerAdapter;
 import me.kubbidev.laboratory.scheduler.SchedulerTask;
 import org.jetbrains.annotations.Nullable;
 
+import java.lang.annotation.*;
+import java.lang.reflect.Method;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -15,18 +16,18 @@ import java.util.concurrent.TimeUnit;
 
 public abstract class ScheduledTask implements Runnable {
     private final SchedulerAdapter schedulerAdapter;
+
+    @Getter
     private final ScheduleSettings scheduleSettings;
+
+    @Nullable
+    private DayOfWeek initialDay = null;
+
+    @Nullable
+    private LocalTime initialTime = null;
 
     @Getter
     private boolean scheduled;
-
-    @Setter
-    @Getter
-    private @Nullable DayOfWeek startingDay = null;
-
-    @Setter
-    @Getter
-    private @Nullable LocalTime startingTime = null;
 
     @Nullable
     private SchedulerTask repeatingTask;
@@ -34,6 +35,43 @@ public abstract class ScheduledTask implements Runnable {
     public ScheduledTask(SchedulerAdapter schedulerAdapter, ScheduleSettings scheduleSettings) {
         this.schedulerAdapter = schedulerAdapter;
         this.scheduleSettings = scheduleSettings;
+
+        InitialLocalDay initialLocalDay = lookupAnnotation(InitialLocalDay.class);
+        if (initialLocalDay != null) {
+            this.initialDay = initialLocalDay.dayOfWeek();
+        }
+
+        InitialLocalTime initialLocalTime = lookupAnnotation(InitialLocalTime.class);
+        if (initialLocalTime != null) {
+            this.initialTime = LocalTime.of(
+                    initialLocalTime.hour(),
+                    initialLocalTime.minute(),
+                    initialLocalTime.second()
+            );
+        }
+    }
+
+    private <A extends Annotation> @Nullable A lookupAnnotation(Class<A> type) {
+        try {
+            Method runMethod = getClass().getDeclaredMethod("run");
+            return runMethod.getAnnotation(type);
+        } catch (NoSuchMethodException e) {
+            return null;
+        }
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.METHOD)
+    public @interface InitialLocalDay {
+        DayOfWeek dayOfWeek();
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.METHOD)
+    public @interface InitialLocalTime {
+        int hour();
+        int minute();
+        int second();
     }
 
     public void cancel() {
@@ -43,10 +81,14 @@ public abstract class ScheduledTask implements Runnable {
         this.scheduled = false;
     }
 
+    public abstract void whenScheduled();
+
     public void schedule() {
         if (isScheduled()) {
             throw new IllegalStateException("Already scheduled");
         }
+
+        whenScheduled();
         this.scheduled = true;
         this.repeatingTask = this.schedulerAdapter.asyncLater(() -> {
             // run the task manually for the first time, if we don't do this the
@@ -65,12 +107,12 @@ public abstract class ScheduledTask implements Runnable {
         return Duration.between(LocalDateTime.now(), getNextScheduleDate()).toMillis();
     }
 
-    public LocalDateTime getNextScheduleDate() {
+    public synchronized LocalDateTime getNextScheduleDate() {
         LocalDateTime currentDate = LocalDateTime.now();
-        LocalDateTime targetTime = this.startingTime == null ? currentDate
-                : currentDate.with(this.startingTime);
+        LocalDateTime targetTime = this.initialTime == null ? currentDate
+                : currentDate.with(this.initialTime);
 
-        DayOfWeek dayOfWeek = this.startingDay;
+        DayOfWeek dayOfWeek = this.initialDay;
         if (dayOfWeek == null) {
             dayOfWeek = currentDate.isBefore(targetTime) ? currentDate.getDayOfWeek()
                     : currentDate.plus(

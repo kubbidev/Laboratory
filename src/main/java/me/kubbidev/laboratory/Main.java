@@ -173,20 +173,35 @@ public class Main {
         log.info("Remaining millis: " + cooldown.remainingTime(TimeUnit.SECONDS));
 
         SchedulerAdapter scheduler = new AsyncJavaScheduler();
-        ScheduledTask scheduledTask = new ScheduledTask(scheduler, ScheduledTask.scheduleSettings(5, TimeUnit.SECONDS)) {
 
-            @Override
-            public void run() {
-                log.info("Scheduled!");
-            }
-        };
-        scheduledTask.setStartingDay(DayOfWeek.TUESDAY);
-        scheduledTask.setStartingTime(LocalTime.of(16, 0, 0));
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy '@' HH:mm:ss");
-        LocalDateTime nextScheduledDate = scheduledTask.getNextScheduleDate();
-        log.info("Next schedule date: ");
-        log.info("- " + nextScheduledDate.format(formatter));
-        log.info("- " + Duration.between(Instant.now(), nextScheduledDate.atZone(ZoneId.systemDefault()).toInstant()).getSeconds() + "s");
+        ScheduledTask scheduledTask = new BirthdayTask(scheduler);
+        scheduledTask.schedule();
+
+        scheduler.shutdownScheduler();
+        scheduler.shutdownExecutor();
     }
 
+    public static class BirthdayTask extends ScheduledTask {
+        public static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd '@' HH:mm:ss")
+                .withZone(ZoneId.systemDefault());
+
+        public BirthdayTask(SchedulerAdapter schedulerAdapter) {
+            super(schedulerAdapter, scheduleSettings(1, TimeUnit.DAYS));
+        }
+
+        @Override
+        public void whenScheduled() {
+            LocalDateTime nextScheduledDate = getNextScheduleDate();
+
+            log.info("Next schedule date: ");
+            log.info("  " + nextScheduledDate.format(DATE_FORMAT));
+            log.info("  " + DurationFormatter.LONG.format(Duration.between(Instant.now(), nextScheduledDate.atZone(ZoneId.systemDefault()).toInstant())));
+        }
+
+        @InitialLocalTime(hour = 0, minute = 0, second = 0)
+        @Override
+        public void run() {
+            log.info("Scheduled!");
+        }
+    }
 }

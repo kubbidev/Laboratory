@@ -72,7 +72,8 @@ public abstract class ScheduledTask implements Runnable {
 
         DayOfWeek dayOfWeek = this.startingDay;
         if (dayOfWeek == null) {
-            dayOfWeek = currentDate.plus(
+            dayOfWeek = currentDate.isBefore(targetTime) ? currentDate.getDayOfWeek()
+                    : currentDate.plus(
                     this.scheduleSettings.duration,
                     this.scheduleSettings.unit.toChronoUnit()
             ).getDayOfWeek();

@@ -5,22 +5,19 @@ import lombok.extern.slf4j.Slf4j;
 import me.kubbidev.laboratory.cooldown.Cooldown;
 import me.kubbidev.laboratory.damage.DamageMetadata;
 import me.kubbidev.laboratory.locale.TranslationManager;
+import me.kubbidev.laboratory.scheduler.AsyncJavaScheduler;
+import me.kubbidev.laboratory.scheduler.SchedulerAdapter;
 import me.kubbidev.laboratory.serialize.*;
 import me.kubbidev.laboratory.serialize.storage.GsonStorageHandler;
+import me.kubbidev.laboratory.util.*;
 import me.kubbidev.laboratory.util.ArithmeticException;
-import me.kubbidev.laboratory.util.DoubleEvaluator;
-import me.kubbidev.laboratory.util.DurationParser;
-import me.kubbidev.laboratory.util.FastMath;
-import me.kubbidev.laboratory.util.DurationFormatter;
 import me.kubbidev.laboratory.util.gson.GsonProvider;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.DayOfWeek;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -174,6 +171,22 @@ public class Main {
         log.info("Remaining millis: " + cooldown.remainingTime(TimeUnit.SECONDS));
         cooldown.reduceInitialCooldown(0.1f);
         log.info("Remaining millis: " + cooldown.remainingTime(TimeUnit.SECONDS));
+
+        SchedulerAdapter scheduler = new AsyncJavaScheduler();
+        ScheduledTask scheduledTask = new ScheduledTask(scheduler, ScheduledTask.scheduleSettings(5, TimeUnit.SECONDS)) {
+
+            @Override
+            public void run() {
+                log.info("Scheduled!");
+            }
+        };
+        scheduledTask.setStartingDay(DayOfWeek.TUESDAY);
+        scheduledTask.setStartingTime(LocalTime.of(16, 0, 0));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy '@' HH:mm:ss");
+        LocalDateTime nextScheduledDate = scheduledTask.getNextScheduleDate();
+        log.info("Next schedule date: ");
+        log.info("- " + nextScheduledDate.format(formatter));
+        log.info("- " + Duration.between(Instant.now(), nextScheduledDate.atZone(ZoneId.systemDefault()).toInstant()).getSeconds() + "s");
     }
 
 }

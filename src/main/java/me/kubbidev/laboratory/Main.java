@@ -21,6 +21,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class Main {
@@ -179,6 +181,25 @@ public class Main {
 
         scheduler.shutdownScheduler();
         scheduler.shutdownExecutor();
+
+        LinkedHashMap<Integer, String> blockToMove = new LinkedHashMap<>() {{
+            put(1, "first");
+            put(2, "second");
+            put(3, "third");
+        }};
+
+        LinkedHashMap<Integer, String> reversedMap = reverseMap(blockToMove, LinkedHashMap::new);
+        log.info("Original Map: " + blockToMove);
+        log.info("Reversed Map: " + reversedMap);
+    }
+
+    public static <M extends Map<K, V>, K extends Comparable<? super K>, V> M reverseMap(M map, Supplier<M> factory) {
+        return map.entrySet().stream()
+                .sorted(Map.Entry.<K, V>comparingByKey().reversed())
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue, (a, b) -> b, factory
+                ));
     }
 
     public static class BirthdayTask extends ScheduledTask {

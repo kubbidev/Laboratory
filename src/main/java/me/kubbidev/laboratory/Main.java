@@ -1,5 +1,6 @@
 package me.kubbidev.laboratory;
 
+import com.google.common.base.Preconditions;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import me.kubbidev.laboratory.cooldown.Cooldown;
@@ -191,6 +192,26 @@ public class Main {
         LinkedHashMap<Integer, String> reversedMap = reverseMap(blockToMove, LinkedHashMap::new);
         log.info("Original Map: " + blockToMove);
         log.info("Reversed Map: " + reversedMap);
+
+        setAttackSpeed(60);
+        log.info("attack speed: " + attackSpeed);
+        log.info("attack limit: " + attackLimit);
+        log.info("breath speed: " + breathSpeed);
+
+    }
+
+    // default values
+    @Getter
+    private static int attackSpeed = 60;
+    private static int attackLimit = 50;
+    private static int breathSpeed = 40;
+
+    public static void setAttackSpeed(int attackSpeed) {
+        Preconditions.checkArgument(attackSpeed > 0, "attack speed must be strictly positive");
+
+        Main.attackSpeed = attackSpeed;
+        Main.attackLimit = (int) (attackSpeed * (5.0 / 6.0));
+        Main.breathSpeed = (int) (attackSpeed * (2.0 / 3.0));
     }
 
     public static <M extends Map<K, V>, K extends Comparable<? super K>, V> M reverseMap(M map, Supplier<M> factory) {
